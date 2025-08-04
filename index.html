@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wi-Fi Password Strength Checker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 400px;
+      color: #fff;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 14px;
+      color: #000;
+    }
+
+    #strengthBar {
+      width: 100%;
+      height: 10px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      margin-bottom: 10px;
+      transition: background-color 0.4s;
+    }
+
+    #strengthBar.weak {
+      background-color: #e74c3c;
+    }
+
+    #strengthBar.medium {
+      background-color: #f39c12;
+    }
+
+    #strengthBar.strong {
+      background-color: #2ecc71;
+    }
+
+    #strengthText {
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    ul {
+      list-style: disc;
+      padding-left: 20px;
+      font-size: 14px;
+      color: #f2f2f2;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔐 Wi-Fi Password Strength</h2>
+    <div class="input-group">
+      <input type="password" id="passwordInput" placeholder="Enter Wi-Fi password">
+      <span class="toggle-password" id="togglePassword">👁️</span>
+    </div>
+    <div id="strengthBar"></div>
+    <p id="strengthText"></p>
+    <ul id="tipsList"></ul>
+  </div>
+
+  <script>
+    const passwordInput = document.getElementById('passwordInput');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+    const tipsList = document.getElementById('tipsList');
+    const togglePassword = document.getElementById('togglePassword');
+
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type');
+      if (type === 'password') {
+        passwordInput.setAttribute('type', 'text');
+        togglePassword.textContent = '🙈';
+      } else {
+        passwordInput.setAttribute('type', 'password');
+        togglePassword.textContent = '👁️';
+      }
+    });
+
+    passwordInput.addEventListener('input', () => {
+      const pwd = passwordInput.value;
+      checkPasswordStrength(pwd);
+    });
+
+    function checkPasswordStrength(password) {
+      const tips = [];
+      let score = 0;
+
+      if (password.length >= 8) score++;
+      else tips.push("Use at least 8 characters.");
+
+      if (/[A-Z]/.test(password)) score++;
+      else tips.push("Include uppercase letters.");
+
+      if (/[a-z]/.test(password)) score++;
+      else tips.push("Include lowercase letters.");
+
+      if (/\d/.test(password)) score++;
+      else tips.push("Add numbers.");
+
+      if (/[^A-Za-z0-9]/.test(password)) score++;
+      else tips.push("Use special characters (!@#...).");
+
+      strengthBar.className = '';
+      if (score <= 2) {
+        strengthBar.classList.add('weak');
+        strengthText.textContent = "Weak Password 🔴";
+      } else if (score <= 4) {
+        strengthBar.classList.add('medium');
+        strengthText.textContent = "Moderate Password 🟠";
+      } else {
+        strengthBar.classList.add('strong');
+        strengthText.textContent = "Strong Password 🟢";
+      }
+
+      tipsList.innerHTML = '';
+      tips.forEach(tip => {
+        const li = document.createElement('li');
+        li.textContent = tip;
+        tipsList.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
