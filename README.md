@@ -24,8 +24,8 @@ Add a screenshot here named `screenshot.png` if desired.
 ## 🛠️ How to Run This Project
 
 1. **Clone or Download the Repository**  
-   ```
-   git clone https://github.com/your-username/wifi-password-strength-visualizer.git
+   ``
+   `https://github.com/anang1526/Wifi-Password-Vernability-Check-.git
    ```
    Or simply download the ZIP and extract it.
 
